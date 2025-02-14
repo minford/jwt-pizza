@@ -170,6 +170,8 @@ test('docs page', async ({ page }) => {
 test('franchise dashboard', async ({ page }) => {
     await page.goto('http://localhost:5173/franchise-dashboard');
     await expect(page.getByText('So you want a piece of the pie?', { exact: true })).toBeVisible();
+    await page.goto('http://localhost:5173/franchise-dashboard/create-store');
+    await expect(page.getByText('Create store', { exact: true })).toBeVisible();
 
 });
 
@@ -209,21 +211,25 @@ test('create franchise', async ({ page }) => {
     await page.getByRole('button', { name: 'Create' }).click();
     // await page.getByRole('row', { name: 'Pizza Shop person Close' }).getByRole('button').click();
     // await page.getByRole('button', { name: 'Close' }).click();
+
+    // // await expect(page.locator('table tr')).toHaveCount(4);
+    // await page.getByRole('row', { name: 'Pizza Shop 常用名字 Close' }).getByRole('button').click();
+    // await page.getByRole('button', { name: 'Close' }).click();
+    // await expect(page.locator('table tr')).toHaveCount(0);
 });
 
-test('create store', async ({ page }) => {
-    await page.route('*/**/api/auth', async (route) => {
-        const loginRes = { user: { id: 3, name: 'franchisee', email: 'f@jwt.com', roles: [{ role: 'franchisee' }] }, token: 'abcdef' };
-        await route.fulfill({ json: loginRes });
-    });
+// test('create store', async ({ page }) => {
+//     await page.route('*/**/api/auth', async (route) => {
+//         const loginRes = { user: { id: 3, name: 'franchisee', email: 'f@jwt.com', roles: [{ role: 'franchisee' }] }, token: 'abcdef' };
+//         await route.fulfill({ json: loginRes });
+//     });
 
-    await page.goto('http://localhost:5173/login');
+//     await page.goto('http://localhost:5173/login');
 
-    await page.getByPlaceholder('Email address').click();
-    await page.getByPlaceholder('Email address').fill('f@jwt.com');
-    await page.getByPlaceholder('Password').fill('franchisee');
-    await page.getByRole('button', { name: 'Login' }).click();
+//     await page.getByPlaceholder('Email address').click();
+//     await page.getByPlaceholder('Email address').fill('f@jwt.com');
+//     await page.getByPlaceholder('Password').fill('franchisee');
+//     await page.getByRole('button', { name: 'Login' }).click();
 
-    await page.getByRole('link', { name: 'Franchise' }).click();
-  });
-  
+//     await page.getByRole('link', { name: 'Franchise' }).click();
+// });
