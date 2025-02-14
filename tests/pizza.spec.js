@@ -129,7 +129,7 @@ test('logout', async ({ page }) => {
 
     await page.getByPlaceholder('Email address').click();
     await page.getByPlaceholder('Email address').fill('a@jwt.com');
-    await page.getByPlaceholder('Password').fill('pass');
+    await page.getByPlaceholder('Password').fill('admin');
     await page.getByRole('button', { name: 'Login' }).click();
 
     await page.getByRole('link', { name: 'Logout' }).click();
@@ -153,7 +153,7 @@ test('diner dashboard', async ({ page }) => {
 
     await page.getByPlaceholder('Email address').click();
     await page.getByPlaceholder('Email address').fill('a@jwt.com');
-    await page.getByPlaceholder('Password').fill('pass');
+    await page.getByPlaceholder('Password').fill('admin');
     await page.getByRole('button', { name: 'Login' }).click();
 
     await page.goto('http://localhost:5173/diner-dashboard');
@@ -188,7 +188,7 @@ test('admin dashboard without logging in', async ({ page }) => {
 test('create franchise', async ({ page }) => {
 
     await page.route('*/**/api/auth', async (route) => {
-        const loginRes = { user: { id: 3, name: 'admin', email: 'a@jwt.com', roles: [{ role: 'admin' }] }, token: 'abcdef' };
+        const loginRes = { user: { id: 3, name: 'person', email: 'a@jwt.com', roles: [{ role: 'admin' }] }, token: 'abcdef' };
         await route.fulfill({ json: loginRes });
     });
 
@@ -196,7 +196,7 @@ test('create franchise', async ({ page }) => {
 
     await page.getByPlaceholder('Email address').click();
     await page.getByPlaceholder('Email address').fill('a@jwt.com');
-    await page.getByPlaceholder('Password').fill('pass');
+    await page.getByPlaceholder('Password').fill('admin');
     await page.getByRole('button', { name: 'Login' }).click();
 
     await page.getByRole('link', { name: 'Admin' }).click();
@@ -204,7 +204,26 @@ test('create franchise', async ({ page }) => {
     await page.getByRole('button', { name: 'Add Franchise' }).click();
     await page.getByPlaceholder('franchise name').click();
     await page.getByPlaceholder('franchise name').fill('Pizza Shop');
-    await page.getByPlaceholder('franchise name').press('Tab');
+    await page.getByRole('textbox', { name: 'franchisee admin email' }).click();
     await page.getByPlaceholder('franchisee admin email').fill('a@jwt.com');
     await page.getByRole('button', { name: 'Create' }).click();
+    // await page.getByRole('row', { name: 'Pizza Shop person Close' }).getByRole('button').click();
+    // await page.getByRole('button', { name: 'Close' }).click();
 });
+
+test('create store', async ({ page }) => {
+    await page.route('*/**/api/auth', async (route) => {
+        const loginRes = { user: { id: 3, name: 'franchisee', email: 'f@jwt.com', roles: [{ role: 'franchisee' }] }, token: 'abcdef' };
+        await route.fulfill({ json: loginRes });
+    });
+
+    await page.goto('http://localhost:5173/login');
+
+    await page.getByPlaceholder('Email address').click();
+    await page.getByPlaceholder('Email address').fill('f@jwt.com');
+    await page.getByPlaceholder('Password').fill('franchisee');
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    await page.getByRole('link', { name: 'Franchise' }).click();
+  });
+  
